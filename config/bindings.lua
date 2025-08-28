@@ -60,7 +60,7 @@ local keys_map = {{
     action = act.SpawnWindow
 }}
 
-local mouse_map = {{
+local mouse_bindings = {{
     event = {
         Up = {
             streak = 1,
@@ -69,14 +69,23 @@ local mouse_map = {{
     },
     mods = "CTRL",
     action = act.OpenLinkAtMouseCursor
+}, {
+    event = {
+        Up = {
+            streak = 2,
+            button = "Left"
+        }
+    },
+    mods = "NONE",
+    action = act.EmitEvent('toggle-maximize')
 }}
 
 return {
-    disable_default_key_bindings = ture,
+    disable_default_key_bindings = true,
     leader = {
         key = "Space",
         mods = mod.SUPER_REV
     },
     keys = keys_map,
-    mouse_bindings = mouse_map
+    mouse_bindings = mouse_bindings
 }

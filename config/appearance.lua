@@ -42,6 +42,12 @@ wezterm.on(
   end
 )
 
+wezterm.on('toggle-maximize', function(window, pane)
+  local overrides = window:get_config_overrides() or {}
+  overrides.window_maximized = true
+  window:set_config_overrides(overrides)
+end)
+
 return {
     term = "xterm-256color",
     animation_fps = 60,
