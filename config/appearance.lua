@@ -25,19 +25,19 @@ wezterm.on(
   function(tab, tabs, panes, config, hover, max_width)
     local title = tab.active_pane.title
     local tab_number = '[' .. tab.tab_index + 1 .. '] '
-    
+
     -- Chrome-like behavior: minimum width with ellipsis for long titles
     local min_width = 20
     local available_width = math.max(min_width, max_width)
     local title_width = available_width - #tab_number - 2 -- 2 for padding
-    
+
     if #title > title_width then
       title = title:sub(1, title_width - 1) .. '…'
     end
-    
+
     local full_title = tab_number .. title
     local padding = math.max(0, (available_width - #full_title) // 2)
-    
+
     return string.rep(' ', padding) .. full_title .. string.rep(' ', padding)
   end
 )
@@ -98,11 +98,11 @@ return {
                 fg_color = "#C8C093",
             },
             inactive_tab = {
-                bg_color = "#2A2A37",
-                fg_color = "#DCD7BA",
+                bg_color = "#16161D",
+                fg_color = "#727169",
             },
             inactive_tab_hover = {
-                bg_color = "#363646",
+                bg_color = "#1F1F28",
                 fg_color = "#DCD7BA",
             },
             new_tab = {
@@ -110,7 +110,7 @@ return {
                 fg_color = "#727169",
             },
             new_tab_hover = {
-                bg_color = "#363646",
+                bg_color = "#1F1F28",
                 fg_color = "#DCD7BA",
             },
         },
