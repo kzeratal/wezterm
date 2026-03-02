@@ -122,7 +122,7 @@ return {
     show_new_tab_button_in_tab_bar = false,
     tab_max_width = 32,
     show_tab_index_in_tab_bar = true,
-    switch_to_last_active_tab_when_closing_tab = true,
+    switch_to_last_active_tab_when_closing_tab = false,
 
     default_cursor_style = "BlinkingBlock",
     cursor_blink_ease_in = "Constant",
