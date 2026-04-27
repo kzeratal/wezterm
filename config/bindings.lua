@@ -7,6 +7,18 @@ mod.SUPER_REV = "SUPER|CTRL"
 mod.CTRL = "CTRL"
 mod.OPT = "OPT"
 
+local spawn_tab_after_current = wezterm.action_callback(function(window, pane)
+    local active_index = 0
+    for _, info in ipairs(window:mux_window():tabs_with_info()) do
+        if info.is_active then
+            active_index = info.index
+            break
+        end
+    end
+    local _, new_pane = window:mux_window():spawn_tab({})
+    window:perform_action(act.MoveTab(active_index + 1), new_pane)
+end)
+
 local keys_map = {{
     key = 'f',
     mods = mod.SUPER,
@@ -24,8 +36,8 @@ local keys_map = {{
 }, -- Tabs
 {
     key = 't',
-    mods = mod.CTRL,
-    action = act.SpawnTab("DefaultDomain")
+    mods = mod.SUPER,
+    action = spawn_tab_after_current
 }, {
     key = 'w',
     mods = mod.CTRL,
