@@ -23,13 +23,15 @@ wezterm.on(
 wezterm.on(
   'format-tab-title',
   function(tab, tabs, panes, config, hover, max_width)
+    local tab_colors = wezterm.GLOBAL.tab_colors or {}
+    local color = tab_colors[tostring(tab.tab_id)]
+
     local title = tab.active_pane.title
     local tab_number = '[' .. tab.tab_index + 1 .. '] '
 
-    -- Chrome-like behavior: minimum width with ellipsis for long titles
     local min_width = 20
     local available_width = math.max(min_width, max_width)
-    local title_width = available_width - #tab_number - 2 -- 2 for padding
+    local title_width = available_width - #tab_number - 2
 
     if #title > title_width then
       title = title:sub(1, title_width - 1) .. '…'
@@ -37,8 +39,19 @@ wezterm.on(
 
     local full_title = tab_number .. title
     local padding = math.max(0, (available_width - #full_title) // 2)
+    local padded = string.rep(' ', padding) .. full_title .. string.rep(' ', padding)
 
-    return string.rep(' ', padding) .. full_title .. string.rep(' ', padding)
+    if color then
+      local bg = wezterm.color.parse(color):darken(tab.is_active and 0.45 or 0.65)
+      local fg = tab.is_active and '#DCD7BA' or '#727169'
+      return {
+        { Background = { Color = bg } },
+        { Foreground = { Color = fg } },
+        { Text = padded },
+      }
+    end
+
+    return padded
   end
 )
 

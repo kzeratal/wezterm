@@ -7,6 +7,35 @@ mod.SUPER_REV = "SUPER|CTRL"
 mod.CTRL = "CTRL"
 mod.OPT = "OPT"
 
+local tab_color_list = {
+    '#C47070', -- dusty red
+    '#C4A060', -- dusty amber
+    '#88A870', -- dusty olive
+    '#60A898', -- dusty teal
+    '#6888B8', -- dusty blue
+    '#9070B0', -- dusty purple
+    '#B87898', -- dusty pink
+}
+
+local function cycle_tab_color(window, offset)
+    local tab_id = tostring(window:active_tab():tab_id())
+    if not wezterm.GLOBAL.tab_color_index then
+        wezterm.GLOBAL.tab_color_index = {}
+    end
+    if not wezterm.GLOBAL.tab_colors then
+        wezterm.GLOBAL.tab_colors = {}
+    end
+    local n = #tab_color_list
+    local idx = (wezterm.GLOBAL.tab_color_index[tab_id] or 0) + offset
+    idx = idx % (n + 1)
+    wezterm.GLOBAL.tab_color_index[tab_id] = idx
+    wezterm.GLOBAL.tab_colors[tab_id] = tab_color_list[idx]
+    -- force tab bar redraw by toggling a dummy override
+    local overrides = window:get_config_overrides() or {}
+    overrides._tab_color_tick = (overrides._tab_color_tick or 0) + 1
+    window:set_config_overrides(overrides)
+end
+
 local spawn_tab_after_current = wezterm.action_callback(function(window, pane)
     local active_index = 0
     for _, info in ipairs(window:mux_window():tabs_with_info()) do
@@ -52,6 +81,26 @@ local keys_map = {{
     key = 'RightArrow',
     mods = mod.SUPER,
     action = act.ActivateTabRelative(1)
+}, {
+    key = 'LeftArrow',
+    mods = 'OPT|SHIFT',
+    action = act.MoveTabRelative(-1)
+}, {
+    key = 'RightArrow',
+    mods = 'OPT|SHIFT',
+    action = act.MoveTabRelative(1)
+}, {
+    key = 'UpArrow',
+    mods = 'OPT|SHIFT',
+    action = wezterm.action_callback(function(window, pane)
+        cycle_tab_color(window, 1)
+    end)
+}, {
+    key = 'DownArrow',
+    mods = 'OPT|SHIFT',
+    action = wezterm.action_callback(function(window, pane)
+        cycle_tab_color(window, -1)
+    end)
 }, -- Panel
 {
     key = '-',
